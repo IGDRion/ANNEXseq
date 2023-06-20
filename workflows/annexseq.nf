@@ -216,11 +216,11 @@ workflow ANNEXSEQ{
                 ch_input_path = 'not_changed'
             }
         }
-    } else {    // ici
+    } else {
         if (params.input_path) {
             ch_input_path = Channel.fromPath(params.input_path, checkIfExists: true)
         } else {
-            ch_input_path = 'not_changed'  // ici
+            ch_input_path = 'not_changed'
         }
     }
 
@@ -246,7 +246,7 @@ workflow ANNEXSEQ{
         .unique()
         .set { ch_gtf }
 
-    ////// ici subworkflow
+
 
 
     if (!params.skip_demultiplexing) {
@@ -263,10 +263,10 @@ workflow ANNEXSEQ{
             .map { it -> [ it[2], it[1], it[3], it[4], it[5], it[6] ] }
             .set { ch_fastq }
         ch_software_versions = ch_software_versions.mix(QCAT.out.versions.ifEmpty(null))
-    } else {     // ici
-        if (!params.skip_alignment) {  // ici
+    } else {     
+        if (!params.skip_alignment) { 
             ch_sample
-                .map { it -> if (it[6].toString().endsWith('.gz')) [ it[0], it[6], it[2], it[1], it[4], it[5] ] } // a modif
+                .map { it -> if (it[6].toString().endsWith('.gz')) [ it[0], it[6], it[2], it[1], it[4], it[5] ] }
                 .set { ch_fastq }
         } else {
             ch_fastq = Channel.empty()
@@ -301,7 +301,7 @@ workflow ANNEXSEQ{
     }
 
     ch_fastqc_multiqc = Channel.empty()
-    if (!params.skip_qc) { // ici
+    if (!params.skip_qc) {
 
         /*
          * SUBWORKFLOW: Fastq QC with Nanoplot and fastqc
@@ -312,7 +312,7 @@ workflow ANNEXSEQ{
     }
 
     ch_samtools_multiqc = Channel.empty()
-    if (!params.skip_alignment) { // ici
+    if (!params.skip_alignment) {
 
         /*
          * SUBWORKFLOW: Make chromosome size file and covert GTF to BED12
@@ -324,7 +324,7 @@ workflow ANNEXSEQ{
         ch_fai         = PREPARE_GENOME.out.ch_fai
         ch_software_versions = ch_software_versions.mix(PREPARE_GENOME.out.samtools_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(PREPARE_GENOME.out.gtf2bed_version.first().ifEmpty(null))
-        if (params.aligner == 'minimap2') { // ici
+        if (params.aligner == 'minimap2') {
 
             /*
             * SUBWORKFLOW: Align fastq files with minimap2 and sort bam files
@@ -371,7 +371,7 @@ workflow ANNEXSEQ{
         }
 
         ch_bedtools_version = Channel.empty()
-        if (!params.skip_bigwig) { // ici
+        if (!params.skip_bigwig) {
 
             /*
              * SUBWORKFLOW: Convert BAM -> BEDGraph -> BigWig
@@ -380,7 +380,7 @@ workflow ANNEXSEQ{
             ch_bedtools_version = ch_bedtools_version.mix(BEDTOOLS_UCSC_BIGWIG.out.bedtools_version.first().ifEmpty(null))
             ch_software_versions = ch_software_versions.mix(BEDTOOLS_UCSC_BIGWIG.out.bedgraphtobigwig_version.first().ifEmpty(null))
         }
-        if (!params.skip_bigbed) { // ici
+        if (!params.skip_bigbed) {
 
             /*
              * SUBWORKFLOW: Convert BAM -> BED12 -> BigBED
@@ -407,7 +407,7 @@ workflow ANNEXSEQ{
 
     ch_featurecounts_gene_multiqc       = Channel.empty()
     ch_featurecounts_transcript_multiqc = Channel.empty()
-    if (!params.skip_quantification && (params.protocol == 'cDNA' || params.protocol == 'directRNA')) { // ici
+    if (!params.skip_quantification && (params.protocol == 'cDNA' || params.protocol == 'directRNA')) {
 
         // Check that reference genome and annotation are the same for all samples if perfoming quantification
         // Check if we have replicates and multiple conditions in the input samplesheet
@@ -424,7 +424,7 @@ workflow ANNEXSEQ{
         //  MULTIPLE_CONDITIONS = ch_sample.map { it -> it[0].split('_')[0..-2].join('_') }.unique().count().val > 1
 
         ch_r_version = Channel.empty()
-        if (params.quantification_method == 'bambu') { //ici
+        if (params.quantification_method == 'bambu') {
             ch_sample
                 .map { it -> [ it[2], it[3] ]}
                 .unique()
@@ -470,13 +470,13 @@ workflow ANNEXSEQ{
                 ///////////////////////////////////////////////////////////////////////////
                 // EXTRACT AND CLASSIFY NEW TRANSCRIPTS, AND PERFORM QC
                 ///////////////////////////////////////////////////////////////////////////
-                FEELNC_CODPOT(VALIDATE_INPUT_GTF.out, fasta, BAMBU_SPLIT_RESULTS.out.novel_genes) //ok, petit doute sur ch_fasta (ref_fa)
+                FEELNC_CODPOT(VALIDATE_INPUT_GTF.out, fasta, BAMBU_SPLIT_RESULTS.out.novel_genes)
                 FEELNC_FORMAT(FEELNC_CODPOT.out.mRNA, FEELNC_CODPOT.out.lncRNA)
                 RESTORE_BIOTYPE(VALIDATE_INPUT_GTF.out, BAMBU_SPLIT_RESULTS.out.novel_isoforms)
-                MERGE_NOVEL(FEELNC_FORMAT.out, RESTORE_BIOTYPE.out) // petit ok
+                MERGE_NOVEL(FEELNC_FORMAT.out, RESTORE_BIOTYPE.out)
 
                 QC_FULL(ch_sortbam,
-                        BAM_SORT_INDEX_SAMTOOLS.out.bai, //ok
+                        BAM_SORT_INDEX_SAMTOOLS.out.bai,
                         MERGE_NOVEL.out.novel_full,
                         VALIDATE_INPUT_GTF.out,
                         BAMBU.out.ch_gene_counts,
@@ -486,10 +486,10 @@ workflow ANNEXSEQ{
                     // FILTER NEW TRANSCRIPTS, AND QC ON FILTERED ANNOTATION
                     ///////////////////////////////////////////////////////////////////////////
                     if(params.filter) {
-                        TFKMERS(MERGE_NOVEL.out.novel_full, fasta, ch_ndr, //doute sur ch_fasta
+                        TFKMERS(MERGE_NOVEL.out.novel_full, fasta, ch_ndr, 
                                 tokenizer, model, ch_transcript_counts)
                         QC_FILTER(ch_sortbam,
-                                BAM_SORT_INDEX_SAMTOOLS.out.bai, //ok
+                                BAM_SORT_INDEX_SAMTOOLS.out.bai,
                                 TFKMERS.out.gtf,
                                 VALIDATE_INPUT_GTF.out,
                                 ch_gene_counts,
@@ -545,7 +545,7 @@ workflow ANNEXSEQ{
         RNA_MODIFICATION_XPORE_M6ANET( ch_sample, ch_nanopolish_sortbam )
     }
 
-    if (!params.skip_fusion_analysis && (params.protocol == 'cDNA' || params.protocol == 'directRNA')) { //ici
+    if (!params.skip_fusion_analysis && (params.protocol == 'cDNA' || params.protocol == 'directRNA')) {
 
         /*
          * SUBWORKFLOW: RNA_FUSIONS_JAFFAL
