@@ -22,12 +22,15 @@ process NANOPLOT {
 
     script:
     def args = task.ext.args ?: ''
+    def file_name = ontfile.getName()
+    def first_part = file_name.split('\\.')[0]
     def input_file = ("$ontfile".endsWith(".fastq.gz")) ? "--fastq ${ontfile}" :
         ("$ontfile".endsWith(".txt")) ? "--summary ${ontfile}" : ''
     """
     NanoPlot \\
         $args \\
         -t $task.cpus \\
+        --prefix $first_part \\
         $input_file
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
