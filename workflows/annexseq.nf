@@ -153,7 +153,7 @@ include { TFKMERS                        } from '../modules/local/transforkmers.
 include { QC as QC_FULL; QC as QC_FILTER } from '../modules/local/qc.nf'
 
 // NEW modules
-include { EXT_TR             } from '../modules/local/extended_transcriptome.nf'
+include { EXT_TR                         } from '../modules/local/extended_transcriptome.nf'
 
 /*
  * SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -174,6 +174,10 @@ include { QUANTIFY_STRINGTIE_FEATURECOUNTS } from '../subworkflows/local/quantif
 include { DIFFERENTIAL_DESEQ2_DEXSEQ       } from '../subworkflows/local/differential_deseq2_dexseq'
 include { RNA_MODIFICATION_XPORE_M6ANET    } from '../subworkflows/local/rna_modifications_xpore_m6anet'
 include { RNA_FUSIONS_JAFFAL               } from '../subworkflows/local/rna_fusions_jaffal'
+
+include { TFKMERS                          } from '../subworkflows/local/transforkmers'
+include { RSEQC                            } from '../subworkflows/local/rseqc'
+include { QC                               } from '../subworkflows/local/qc'
 
 ////////////////////////////////////////////////////
 /* --    IMPORT NF-CORE MODULES/SUBWORKFLOWS   -- */

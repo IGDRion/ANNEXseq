@@ -1,7 +1,7 @@
-include { PREPARE_RSEQC     } from './prepare.nf'
-include { GTF_TO_GENEPRED   } from './gtftogenepred.nf'
-include { GENEPRED_TO_BED   } from './genepredtobed.nf'
-include { GENEBODY_COVERAGE } from './gene_body_coverage.nf'
+include { PREPARE_RSEQC     } from '../../modules/local/prepare.nf'
+include { GTF_TO_GENEPRED   } from '../../modules/local/gtftogenepred.nf'
+include { GENEPRED_TO_BED   } from '../../modules/local/genepredtobed.nf'
+include { GENEBODY_COVERAGE } from '../../modules/local/gene_body_coverage.nf'
 
 workflow RSEQC {
   take:

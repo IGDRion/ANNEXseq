@@ -1,7 +1,7 @@
-include { EXTRACT_TSS_REGIONS   } from './extract_regions.nf'
-include { EXTRACT_TSS_SEQUENCES } from './extract_sequences.nf'
-include { PREDICT               } from './predict.nf'
-include { FILTER                } from './filter.nf'
+include { EXTRACT_TSS_REGIONS   } from '../../modules/local/extract_regions.nf'
+include { EXTRACT_TSS_SEQUENCES } from '../../modules/local/extract_sequences.nf'
+include { PREDICT               } from '../../modules/local/predict.nf'
+include { FILTER                } from '../../modules/local/filter.nf'
 
 workflow TFKMERS {
   take:
