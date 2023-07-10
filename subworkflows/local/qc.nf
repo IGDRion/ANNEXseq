@@ -1,6 +1,6 @@
 include { MERGE_ANNOTATIONS } from '../../modules/local/merge_known_novel.nf'
 include { REPORT            } from '../../modules/local/report.nf'
-include { RSEQC             } from '../../modules/local/rseqc.nf'
+include { RSEQC             } from '../../subworkflows/local/rseqc.nf'
 
 workflow QC {
   take:
