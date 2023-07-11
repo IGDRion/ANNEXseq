@@ -55,7 +55,7 @@ def qc_gtf(gtf, gene_counts, ref):
 
         g_id = gene["gene_id"]
         g_biotype = gene["gene_biotype"]
-        g_status = "novel" if g_id.startswith("BambuGene","unstranded.Gene") else "known"
+        g_status = "novel" if g_id.startswith(('BambuGene','unstranded.Gene')) else "known"
         g_count = gene_counts[g_id]["counts"]  # Counts in all samples
         g_samples = gene_counts[g_id]["validates"]  # Found in x samples
         g_nb_tx = len(gene.transcripts)  # Number of isoforms
@@ -63,7 +63,7 @@ def qc_gtf(gtf, gene_counts, ref):
         # Compute genomic extension with start/end in ref
         ext_5 = 0
         ext_3 = 0
-        if not g_id.startswith("BambuGene","unstranded.Gene"):
+        if not g_id.startswith(('BambuGene','unstranded.Gene')):
             if gene.strand == "+":
                 ext_5 = ref_start_end[gene["gene_id"]]["start"] - gene.start
                 ext_3 = gene.end - ref_start_end[gene["gene_id"]]["end"]
