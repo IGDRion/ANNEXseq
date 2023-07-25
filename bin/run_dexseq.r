@@ -99,7 +99,7 @@ dFilter <- dmFilter(d,
 
 formulaFullModel <- as.formula("~sample + exon + condition:exon")
 dxd <- DEXSeqDataSet(countData=round(as.matrix(counts(dFilter)[,-c(1:2)])),
-                    sampleData=sampleinfo,
+                    sampleData=DRIMSeq::samples(dFilter),
                     design=formulaFullModel,
                     featureID = counts(dFilter)$feature_id,
                     groupID=counts(dFilter)$gene_id)
