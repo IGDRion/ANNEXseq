@@ -1,6 +1,6 @@
 process MINIMAP2_ALIGN {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_super_high'
 
     conda "bioconda::minimap2=2.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

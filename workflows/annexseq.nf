@@ -150,6 +150,7 @@ include { FEELNC_FORMAT                  } from '../modules/local/format.nf'
 include { RESTORE_BIOTYPE                } from '../modules/local/restore_biotypes.nf'
 include { MERGE_NOVEL                    } from '../modules/local/merge_novel.nf'
 
+
 // NEW modules
 include { EXT_TR                         } from '../modules/local/extended_transcriptome.nf'
 
