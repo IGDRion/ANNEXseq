@@ -149,8 +149,7 @@ include { FEELNC_CODPOT                  } from '../modules/local/codpot.nf'
 include { FEELNC_FORMAT                  } from '../modules/local/format.nf'
 include { RESTORE_BIOTYPE                } from '../modules/local/restore_biotypes.nf'
 include { MERGE_NOVEL                    } from '../modules/local/merge_novel.nf'
-//include { TFKMERS                        } from '../modules/local/transforkmers.nf'
-//include { QC as QC_FULL; QC as QC_FILTER } from '../modules/local/qc.nf'
+
 
 // NEW modules
 include { EXT_TR                         } from '../modules/local/extended_transcriptome.nf'
